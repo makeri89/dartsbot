@@ -9,3 +9,7 @@ except FileNotFoundError:
     pass
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+SECRET = os.getenv('SECRET')
+
+# conversation handler states
+UNAUTHORIZED, NAME, PLAYER, AVERAGE = 0, 1, 2, 3

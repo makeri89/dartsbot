@@ -11,7 +11,7 @@ class UserRepository:
     def find_all(self):
         cursor = self._connection.cursor()
         
-        cursor.execute("SELECT * FROM users;")
+        cursor.execute('SELECT * FROM users')
         
         result = cursor.fetchall()
         
@@ -20,7 +20,10 @@ class UserRepository:
     def find_by_id(self, id):
         cursor = self._connection.cursor()
         
-        cursor.execute('SELECT * FROM users WHERE id=?', (id,))
+        cursor.execute(
+            'SELECT * FROM users WHERE id=:id',
+            {'id': id}
+        )
         
         result = cursor.fetchone()
         
@@ -29,7 +32,10 @@ class UserRepository:
     def find_by_name(self, name):
         cursor = self._connection.cursor()
         
-        cursor.execute('SELECT * FROM users WHERE name = ?', (name,))
+        cursor.execute(
+            'SELECT * FROM users WHERE name=:name',
+            {'name': name}
+        )
         
         result = cursor.fetchone()
         
@@ -39,10 +45,21 @@ class UserRepository:
         cursor = self._connection.cursor()
         
         cursor.execute(
-            'INSERT INTO users (id, name) VALUES (?, ?);',
-            (id, username)
+            'INSERT INTO users (id, name) VALUES (:id, :username)',
+            {'id': id, 'username': username}
         )
         
         self._connection.commit()
+        
+    def find_players_of_match(self, match):
+        cursor = self._connection.cursor()
+        
+        result = cursor.execute(
+            'SELECT u.id, u.name FROM users u, players_to_matches pm \
+                WHERE u.id=pm.player_id AND pm.match_id=:match_id',
+            {'match_id': match.id}
+        )
+        
+        return list(map(row_to_user, result.fetchall()))
 
 user_repository = UserRepository(get_database_connection())

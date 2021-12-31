@@ -10,6 +10,8 @@ Create your own telegram bot and get the token from bot father. Then create a `.
 
 ```
 BOT_TOKEN=<your-bot-token-from-bot-father>
+SECRET=<secret-string-for-authenticating>
+DATABASE_URL=<database-url>
 ```
 
 Then create a virtual environment, activate it and install the required packages:
@@ -22,12 +24,28 @@ pip install -r ./requirements.txt
 
 Before starting the bot, initialize the database
 
-```
-python3 db.py
+```bash
+python3 src/db.py
 ```
 
 After that start the bot with the command
 
+```bash
+python3 src/index.py
 ```
-python3 index.py
+
+## Testing
+
+Set a `.env.test` file with the following content.
+
 ```
+DATABASE_URL=<test-database-url>
+```
+
+and run tests with
+
+```bash
+ENV=TRUE pytest bot
+```
+
+The bot is not tested yet.

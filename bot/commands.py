@@ -1,7 +1,8 @@
 from telegram import (
     Update,
     InlineKeyboardButton,
-    InlineKeyboardMarkup
+    InlineKeyboardMarkup,
+    ReplyKeyboardMarkup
 )
 from telegram.ext import (
     CallbackContext,
@@ -10,10 +11,14 @@ from telegram.ext import (
 
 from services.user_service import user_service
 from services.average_service import average_service
+from services.match_service import match_service
+from services.score_service import score_service
 
 from logger import logger
 
-from config import SECRET, UNAUTHORIZED, NAME, PLAYER, AVERAGE
+from config import SECRET, UNAUTHORIZED, NAME, PLAYER, \
+    AVERAGE, MATCH_AVERAGE, DARTS_USED, HIGHSCORE, SAVE_MATCH, \
+    ASK_MORE_PLAYERS
 
 
 def player_keyboard(users):
@@ -68,14 +73,12 @@ def get_average(update: Update, context: CallbackContext):
 def average_printer(update: Update, context: CallbackContext):
     query = update.callback_query
 
-    user = user_service.get_user_by_id(query.data)
-
-    average = average_service.get_user_average(user)
+    average = score_service.get_average(query.data)
 
     query.answer()
 
     query.edit_message_text(
-        text=f'Pelaaja: {average[0]}, keskiarvo: {average[1]}')
+        text=f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]}')
 
 
 def add_average_choice(update: Update, context: CallbackContext):
@@ -100,9 +103,111 @@ def average(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
+def new_match(update: Update, context: CallbackContext):
+    if is_registered(update.message.chat.id):
+        global current_match_id
+        current_match_id = match_service.add_match()
+        update.message.reply_text('Uusi peli luotu!')
+        users = user_service.get_users()
+        keyboard = player_keyboard(users)
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            'Lisää pelaaja:', reply_markup=reply_markup)
+        return MATCH_AVERAGE
+    return UNAUTHORIZED
+
+
+def match_average(update: Update, context: CallbackContext):
+    query = update.callback_query
+
+    global user_for_match
+    user_for_match = query.data
+
+    query.answer()
+    query.edit_message_text(text='Syötä keskiarvo:')
+
+    return DARTS_USED
+
+
+def darts_used(update: Update, context: CallbackContext):
+    global match_avg
+    try:
+        match_avg = float(update.message.text)
+    except:
+        update.message.reply_text('Syötä kelvollinen keskiarvo:')
+        return DARTS_USED
+
+    update.message.reply_text('Syötä käytettyjen tikkojen määrä:')
+
+    return HIGHSCORE
+
+
+def highscore(update: Update, context: CallbackContext):
+    global darts_amount
+
+    try:
+        darts_amount = int(update.message.text)
+    except:
+        darts_amount = 0
+
+    update.message.reply_text('Syötä highscore:')
+
+    return SAVE_MATCH
+
+
+def save_score(update: Update, context: CallbackContext):
+    try:
+        highscore = int(update.message.text)
+    except:
+        highscore = 0
+
+    score_service.add_score(
+        current_match_id,
+        user_for_match,
+        match_avg,
+        darts_amount,
+        highscore
+    )
+
+    update.message.reply_text('Pelaajan tulos lisätty!')
+
+    # keyboard = [
+    #     [InlineKeyboardButton('kyllä', callback_data=1)],
+    #     [InlineKeyboardButton('ei', callback_data=0)]
+    # ]
+
+    keyboard = [
+        ['Kyllä'],
+        ['Ei']
+    ]
+
+    reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True)
+    update.message.reply_text(
+        'Lisää pelaaja:', reply_markup=reply_markup)
+
+    return ASK_MORE_PLAYERS
+
+
+def more_players(update: Update, context: CallbackContext):
+    # query = update.callback_query
+    print(update)
+    print(context.user_data)
+    if update.message.text == 'Kyllä':
+        logger.info('text was Kyllä')
+        users = user_service.get_users()
+        keyboard = player_keyboard(users)
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            'Lisää pelaaja:', reply_markup=reply_markup)
+        return MATCH_AVERAGE
+    else:
+        update.message.reply_text('Peli tallennettu!')
+    return ConversationHandler.END
+
+
 def cancel(update: Update, context: CallbackContext):
     logger.info('Cancelled')
-    update.message.reply_text('Peruit rekisteröitymisen')
+    update.message.reply_text('Peruit toiminnon')
 
     return ConversationHandler.END
 
@@ -113,3 +218,23 @@ def unauthorized(update: Update, context: CallbackContext):
         'Unauthorized access, please ask admin for a joining link')
 
     return ConversationHandler.END
+
+
+def help_message(update: Update, context: CallbackContext):
+    message = '''
+*Botti dartspelien tallentamiseen*
+
+Komennot:
+
+/start \- luo uusi käyttäjä
+\(toimii vain rekisteröitymislinkin kautta\)
+
+/newmatch \- lisää uusi peli
+• Voit lisätä useamman pelaajan kerralla
+• Keskiarvo on ainoa pakollinen tieto
+• Voit ohittaa muut tiedot lähettämällä jotain muuta kuin numeron
+
+/getaverage \- hae pelaajan keskiarvo
+    '''
+
+    update.message.reply_text(message, parse_mode='MarkdownV2')

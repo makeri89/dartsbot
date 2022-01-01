@@ -29,4 +29,21 @@ class ScoreRepository:
             }
         )
 
+        self._connection.commit()
+
+    def find_player_averages(self, player):
+        cursor = self._connection.cursor()
+
+        result = cursor.execute(
+            '''
+            SELECT u.name, AVG(s.average) AS average
+            FROM users u, scores s
+            WHERE u.id=s.player_id AND u.id=:user_id
+            ''',
+            {'user_id': player.id}
+        )
+
+        return result.fetchone()
+
+
 score_repository = ScoreRepository(get_database_connection())

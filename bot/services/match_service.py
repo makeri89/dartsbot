@@ -29,3 +29,6 @@ class MatchService:
     def get_match_players(self, match_id):
         match = self.get_single_match(match_id)
         return self._user_repository.find_players_of_match(match)
+
+
+match_service = MatchService()

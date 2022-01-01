@@ -11,6 +11,7 @@ connection = sqlite3.connect(
 )
 connection.row_factory = sqlite3.Row
 
+
 def drop_tables():
     cursor = connection.cursor()
 
@@ -19,8 +20,9 @@ def drop_tables():
     cursor.execute('DROP TABLE IF EXISTS player_to_matches')
     cursor.execute('DROP TABLE IF EXISTS matches')
     cursor.execute('DROP TABLE IF EXISTS scores')
-    
+
     connection.commit()
+
 
 def create_tables():
     cursor = connection.cursor()
@@ -47,7 +49,6 @@ def create_tables():
     ''')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS scores (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
             player_id TEXT REFERENCES users,
             match_id TEXT REFERENCES matches,
             average REAL,
@@ -61,15 +62,18 @@ def create_tables():
             match_id TEXT REFERENCES matches
         );
     ''')
-    
+
     connection.commit()
-    
+
+
 def initialize_database():
     # drop_tables()
     create_tables()
-    
+
+
 def get_database_connection():
     return connection
+
 
 if __name__ == '__main__':
     initialize_database()

@@ -6,6 +6,7 @@ from handlers import average_handler, average_player_handler, conv_handler
 updater = Updater(token=BOT_TOKEN,
                   use_context=True)
 
+
 def main():
     dispatcher = updater.dispatcher
 
@@ -14,6 +15,7 @@ def main():
     dispatcher.add_handler(average_player_handler)
 
     updater.start_polling()
-    
+
+
 if __name__ == '__main__':
     main()

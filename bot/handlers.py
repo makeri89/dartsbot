@@ -24,7 +24,8 @@ conv_handler = ConversationHandler(
             MessageHandler(Filters.text & ~Filters.command, commands.name)
         ],
         UNAUTHORIZED: [
-            MessageHandler(Filters.text & ~Filters.command, commands.unauthorized)
+            MessageHandler(Filters.text & ~Filters.command,
+                           commands.unauthorized)
         ],
         PLAYER: [
             CallbackQueryHandler(commands.add_average_choice)

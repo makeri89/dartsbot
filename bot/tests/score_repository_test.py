@@ -16,10 +16,10 @@ class TestScoreRepository(unittest.TestCase):
         initialize_database()
         self.user_id = uuid4().hex
         self.user_repository.create_user(self.user_id, 'Test User')
-        
+
     def test_database_is_empty_at_first(self):
         self.assertEqual(len(self.score_repository.find_all()), 0)
-        
+
     def test_score_can_be_created(self):
         user = self.user_repository.find_by_id(self.user_id)
         match_id = uuid4().hex

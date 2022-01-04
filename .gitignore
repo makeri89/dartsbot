@@ -5,3 +5,5 @@ data/database.sqlite
 data/test.sqlite
 venv
 .vscode
+plt.py
+fig.png

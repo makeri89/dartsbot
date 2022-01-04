@@ -2,7 +2,7 @@ from telegram.ext import Updater
 
 from config import BOT_TOKEN
 from handlers import average_handler, average_player_handler, \
-    conv_handler, help_handler
+    conv_handler, help_handler, send_figure_handler
 
 updater = Updater(token=BOT_TOKEN,
                   use_context=True)
@@ -15,6 +15,7 @@ def main():
     dispatcher.add_handler(average_handler)
     dispatcher.add_handler(average_player_handler)
     dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(send_figure_handler)
 
     updater.start_polling()
 

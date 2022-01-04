@@ -35,3 +35,11 @@ class TestScoreService(unittest.TestCase):
         self.service.add_score(match_2_id, player_id, 40.0, 40, 68)
         average = self.service.get_average(player_id)
         self.assertAlmostEqual(average['average'], 35.0)
+
+    def test_average_is_fetched_by_date_correctly(self):
+        player_id = uuid4().hex
+        self.user_service.create_user(player_id, 'Test User')
+        match_id = self.match_service.add_match()
+        self.service.add_score(match_id, player_id, 30.0, 40, 68)
+        result = self.service.get_all_averages_by_date(player_id)
+        self.assertAlmostEqual(result[0]['average'], 30.0)

@@ -67,7 +67,7 @@ def create_tables():
 
 
 def initialize_database():
-    # drop_tables()
+    drop_tables()
     create_tables()
 
 

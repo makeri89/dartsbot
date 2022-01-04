@@ -45,5 +45,20 @@ class ScoreRepository:
 
         return result.fetchone()
 
+    def find_player_averages_by_date(self, player, isodate):
+        cursor = self._connection.cursor()
+
+        result = cursor.execute(
+            '''
+            SELECT u.name, AVG(s.average) AS average, m.date
+            FROM users u, scores s, matches m
+            WHERE u.id=s.player_id AND u.id=:user_id
+            AND m.id=s.match_id AND m.date=datetime(:date)
+            ''',
+            {'user_id': player.id, 'date': isodate}
+        )
+
+        return result.fetchall()
+
 
 score_repository = ScoreRepository(get_database_connection())

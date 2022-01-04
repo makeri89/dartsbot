@@ -1,3 +1,6 @@
+from dateutil import parser
+from datetime import datetime, timedelta
+
 from repositories.score_repository import score_repository
 from repositories.match_repository import match_repository
 from repositories.user_repository import user_repository
@@ -23,6 +26,26 @@ class ScoreService:
     def get_average(self, player_id):
         player = self._user_repository.find_by_id(player_id)
         return self._repository.find_player_averages(player)
+
+    def get_date_average(self, player_id, date):
+        player = self._user_repository.find_by_id(player_id)
+        isodate = date.isoformat()
+        return self._repository.find_player_averages_by_date(player, isodate)
+
+    def get_all_averages_by_date(self, player_id):
+        player = self._user_repository.find_by_id(player_id)
+        oldest_match = self._match_repository.find_oldest_match_by_player(
+            player
+        )
+        result = []
+        date_to_fetch = parser.parse(oldest_match.date)
+        today = datetime.now()
+        delta = timedelta(days=1)
+        while date_to_fetch <= today:
+            avg = self.get_date_average(player.id, date_to_fetch)
+            result.append(avg[0])
+            date_to_fetch += delta
+        return result
 
 
 score_service = ScoreService()

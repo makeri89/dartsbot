@@ -4,6 +4,8 @@ import pandas as pd
 from dateutil import parser
 from datetime import datetime, timedelta
 
+from config import FIGURE_FILE
+
 
 class Plotter:
     def __init__(self):
@@ -48,7 +50,7 @@ class Plotter:
 
     def save(self):
         plt.legend()
-        plt.savefig('fig.png', dpi=800)
+        plt.savefig(FIGURE_FILE, dpi=800)
         self.clear()
 
     def show(self):

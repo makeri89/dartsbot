@@ -2,8 +2,7 @@ from telegram import (
     Update,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    ReplyKeyboardMarkup,
-    replymarkup
+    ReplyKeyboardMarkup
 )
 from telegram.ext import (
     CallbackContext,
@@ -17,10 +16,7 @@ from services.score_service import score_service
 
 from plotter import Plotter
 from logger import logger
-
-from config import SECRET, UNAUTHORIZED, NAME, PLAYER, \
-    AVERAGE, MATCH_AVERAGE, DARTS_USED, HIGHSCORE, SAVE_MATCH, \
-    ASK_MORE_PLAYERS, FIGURE_PLAYERS, MORE_PLAYERS_TO_FIGURE
+import config
 
 
 plotter = Plotter()
@@ -38,11 +34,15 @@ def is_registered(id):
     return user_service.get_user_by_id(id)
 
 
+def authorize(query):
+    return query == config.SECRET
+
+
 def start(update: Update, context: CallbackContext):
     update.message.reply_text('Kerro nimesi:')
-    if context.args and context.args[0] == SECRET:
-        return NAME
-    return UNAUTHORIZED
+    if context.args and authorize(context.args[0]):
+        return config.NAME
+    return config.UNAUTHORIZED
 
 
 def name(update: Update, context: CallbackContext):
@@ -63,8 +63,8 @@ def users_for_average(update: Update, context: CallbackContext):
         update.message.reply_text(
             'Valitse pelaaja:', reply_markup=reply_markup)
 
-        return PLAYER
-    return UNAUTHORIZED
+        return config.PLAYER
+    return config.UNAUTHORIZED
 
 
 def get_average(update: Update, context: CallbackContext):
@@ -96,7 +96,7 @@ def add_average_choice(update: Update, context: CallbackContext):
     query.edit_message_text(
         text=f'Valitsit pelaajaksi: {global_user.name}\nSyötä keskiarvo:')
 
-    return AVERAGE
+    return config.AVERAGE
 
 
 def average(update: Update, context: CallbackContext):
@@ -118,8 +118,8 @@ def new_match(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(
             'Lisää pelaaja:', reply_markup=reply_markup)
-        return MATCH_AVERAGE
-    return UNAUTHORIZED
+        return config.MATCH_AVERAGE
+    return config.UNAUTHORIZED
 
 
 def match_average(update: Update, context: CallbackContext):
@@ -131,7 +131,7 @@ def match_average(update: Update, context: CallbackContext):
     query.answer()
     query.edit_message_text(text='Syötä keskiarvo:')
 
-    return DARTS_USED
+    return config.DARTS_USED
 
 
 def darts_used(update: Update, context: CallbackContext):
@@ -140,11 +140,11 @@ def darts_used(update: Update, context: CallbackContext):
         match_avg = float(update.message.text)
     except:
         update.message.reply_text('Syötä kelvollinen keskiarvo:')
-        return DARTS_USED
+        return config.DARTS_USED
 
     update.message.reply_text('Syötä käytettyjen tikkojen määrä:')
 
-    return HIGHSCORE
+    return config.HIGHSCORE
 
 
 def highscore(update: Update, context: CallbackContext):
@@ -157,7 +157,7 @@ def highscore(update: Update, context: CallbackContext):
 
     update.message.reply_text('Syötä highscore:')
 
-    return SAVE_MATCH
+    return config.SAVE_MATCH
 
 
 def save_score(update: Update, context: CallbackContext):
@@ -185,7 +185,7 @@ def save_score(update: Update, context: CallbackContext):
     update.message.reply_text(
         'Lisää pelaaja:', reply_markup=reply_markup)
 
-    return ASK_MORE_PLAYERS
+    return config.ASK_MORE_PLAYERS
 
 
 def more_players(update: Update, context: CallbackContext):
@@ -196,7 +196,7 @@ def more_players(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(
             'Lisää pelaaja:', reply_markup=reply_markup)
-        return MATCH_AVERAGE
+        return config.MATCH_AVERAGE
     else:
         update.message.reply_text('Peli tallennettu!')
     return ConversationHandler.END
@@ -239,8 +239,9 @@ Komennot:
 • Kaavio kertoo pelaajien keskiarvohistorian
 
 /sendfigure \- lähettää kaavion haluamillasi pelaajilla
+• Samalla nollaa kaavioon valitut pelaajat
 
-/cancel \- peru nykyinen toiminto, tyhjennä kuvaaja
+/cancel \- peru nykyinen toiminto, tyhjennä kaavio
     '''
 
     update.message.reply_text(message, parse_mode='MarkdownV2')
@@ -253,8 +254,8 @@ def figure(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text(
             'Lisää pelaaja kaavioon:', reply_markup=reply_markup)
-        return FIGURE_PLAYERS
-    return UNAUTHORIZED
+        return config.FIGURE_PLAYERS
+    return config.UNAUTHORIZED
 
 
 def player_to_figure(update: Update, context: CallbackContext):
@@ -272,16 +273,7 @@ def player_to_figure(update: Update, context: CallbackContext):
 
 
 def send_figure(update: Update, context: CallbackContext):
-    # if update.message.text == 'Haluan kaavioni':
+    update.message.reply_text('Pieni hetki, kaaviota luodaan...')
     plotter.save()
     with open('./fig.png', 'rb') as image:
         update.message.reply_photo(image)
-    return ConversationHandler.END
-
-    # if update.message.text == 'Lisää pelaajia':
-    #     users = user_service.get_users()
-    #     keyboard = player_keyboard(users)
-    #     reply_markup = InlineKeyboardMarkup(keyboard)
-    #     update.message.reply_text(
-    #         'Lisää pelaaja kaavioon:', reply_markup=reply_markup)
-    #     return FIGURE_PLAYERS

@@ -7,10 +7,7 @@ from telegram.ext import (
 )
 
 import commands
-from config import UNAUTHORIZED, NAME, PLAYER, \
-    AVERAGE, MATCH_AVERAGE, DARTS_USED, HIGHSCORE, \
-    SAVE_MATCH, ASK_MORE_PLAYERS, FIGURE_PLAYERS, \
-    MORE_PLAYERS_TO_FIGURE
+import config
 
 average_handler = CommandHandler('getaverage', commands.get_average)
 average_player_handler = CallbackQueryHandler(commands.average_printer)
@@ -33,50 +30,44 @@ conv_handler = ConversationHandler(
         new_figure_handler
     ],
     states={
-        NAME: [
+        config.NAME: [
             MessageHandler(Filters.text & ~Filters.command, commands.name)
         ],
-        UNAUTHORIZED: [
+        config.UNAUTHORIZED: [
             MessageHandler(
                 Filters.text & ~Filters.command,
                 commands.unauthorized
             )
         ],
-        PLAYER: [
+        config.PLAYER: [
             CallbackQueryHandler(commands.add_average_choice)
         ],
-        AVERAGE: [
+        config.AVERAGE: [
             MessageHandler(Filters.text & ~Filters.command, commands.average)
         ],
-        MATCH_AVERAGE: [
+        config.MATCH_AVERAGE: [
             CallbackQueryHandler(commands.match_average)
         ],
-        DARTS_USED: [
+        config.DARTS_USED: [
             MessageHandler(Filters.text & ~Filters.command,
                            commands.darts_used)
         ],
-        HIGHSCORE: [
+        config.HIGHSCORE: [
             MessageHandler(Filters.text & ~Filters.command, commands.highscore)
         ],
-        SAVE_MATCH: [
+        config.SAVE_MATCH: [
             MessageHandler(Filters.text & ~Filters.command,
                            commands.save_score)
         ],
-        ASK_MORE_PLAYERS: [
+        config.ASK_MORE_PLAYERS: [
             MessageHandler(
                 Filters.regex('^(Kyllä|Ei)$'),
                 commands.more_players
             )
         ],
-        FIGURE_PLAYERS: [
+        config.FIGURE_PLAYERS: [
             CallbackQueryHandler(commands.player_to_figure)
-        ],
-        # MORE_PLAYERS_TO_FIGURE: [
-        #     MessageHandler(
-        #         Filters.regex('^(Lisää pelaajia|Haluan kaavioni)$'),
-        #         commands.send_figure
-        #     )
-        # ]
+        ]
     },
     fallbacks=[cancel_handler]
 )

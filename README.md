@@ -15,7 +15,7 @@ DATABASE_URL=<database-url>
 FIGURE_FILE=<filename-for-matplotlib-figure>
 ```
 
-Then create a virtual environment, activate it and install the required packages:
+Or check the `.env.example` file for an example. Then create a virtual environment, activate it and install the required packages:
 
 ```bash
 python3 -m venv venv
@@ -46,7 +46,7 @@ DATABASE_URL=<test-database-url>
 and run tests with
 
 ```bash
-ENV=TRUE pytest bot
+ENV=TRUE pytest src
 ```
 
 The bot itself is not tested.

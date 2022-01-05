@@ -48,8 +48,15 @@ def start(update: Update, context: CallbackContext):
 def name(update: Update, context: CallbackContext):
     username = update.message.text
     id = update.message.chat.id
-    user_service.create_user(id, username)
-    update.message.reply_text('Kiitos, olet nyt rekisteröitynyt.')
+    created_user = user_service.create_user(id, username)
+    if created_user == 'valid':
+        update.message.reply_text('Kiitos, olet nyt rekisteröitynyt.')
+    else:
+        update.message.reply_text(
+            f'Rekisteröityminen epäonnistui, tapahtui seuraava virhe: {created_user}'
+        )
+        update.message.reply_text('Anna uusi tunnus:')
+        return config.NAME
 
     return ConversationHandler.END
 

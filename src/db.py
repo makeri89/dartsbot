@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-from config import DATABASE_URL
+from util.config import DATABASE_URL
 
 dirname = os.path.dirname(__file__)
 

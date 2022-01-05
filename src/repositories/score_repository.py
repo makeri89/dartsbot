@@ -58,7 +58,7 @@ class ScoreRepository:
             {'user_id': player.id, 'date': isodate}
         )
 
-        return result.fetchall()
+        return result.fetchone()
 
 
 score_repository = ScoreRepository(get_database_connection())

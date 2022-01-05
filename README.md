@@ -12,6 +12,7 @@ Create your own telegram bot and get the token from bot father. Then create a `.
 BOT_TOKEN=<your-bot-token-from-bot-father>
 SECRET=<secret-string-for-authenticating>
 DATABASE_URL=<database-url>
+FIGURE_FILE=<filename-for-matplotlib-figure>
 ```
 
 Then create a virtual environment, activate it and install the required packages:
@@ -48,4 +49,4 @@ and run tests with
 ENV=TRUE pytest bot
 ```
 
-The bot is not tested yet.
+The bot itself is not tested.

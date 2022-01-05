@@ -4,7 +4,7 @@ import pandas as pd
 from dateutil import parser
 from datetime import datetime, timedelta
 
-from config import FIGURE_FILE
+from util.config import FIGURE_FILE
 
 
 class Plotter:

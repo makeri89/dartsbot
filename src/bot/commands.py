@@ -14,9 +14,9 @@ from services.average_service import average_service
 from services.match_service import match_service
 from services.score_service import score_service
 
-from plotter import Plotter
-from logger import logger
-import config
+from util.plotter import Plotter
+from util.logger import logger
+import util.config as config
 
 
 plotter = Plotter()

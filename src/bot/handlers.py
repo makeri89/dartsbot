@@ -6,8 +6,8 @@ from telegram.ext import (
     Filters
 )
 
-import commands
-import config
+import bot.commands as commands
+import util.config as config
 
 average_handler = CommandHandler('getaverage', commands.get_average)
 average_player_handler = CallbackQueryHandler(commands.average_printer)

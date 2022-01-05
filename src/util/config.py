@@ -5,9 +5,9 @@ dirname = os.path.dirname(__file__)
 
 try:
     if os.environ.get('ENV') == 'TEST':
-        load_dotenv(dotenv_path=os.path.join(dirname, '..', '.env.test'))
+        load_dotenv(dotenv_path=os.path.join(dirname, '..', '..', '.env.test'))
     else:
-        load_dotenv(dotenv_path=os.path.join(dirname, '..', '.env'))
+        load_dotenv(dotenv_path=os.path.join(dirname, '..', '..', '.env'))
 except FileNotFoundError:
     pass
 

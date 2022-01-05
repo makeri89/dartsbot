@@ -1,7 +1,7 @@
 from telegram.ext import Updater
 
-from config import BOT_TOKEN
-from handlers import average_handler, average_player_handler, \
+from util.config import BOT_TOKEN
+from bot.handlers import average_handler, average_player_handler, \
     conv_handler, help_handler, send_figure_handler
 
 updater = Updater(token=BOT_TOKEN,

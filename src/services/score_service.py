@@ -43,7 +43,7 @@ class ScoreService:
         delta = timedelta(days=1)
         while date_to_fetch <= today:
             avg = self.get_date_average(player.id, date_to_fetch)
-            result.append(avg[0])
+            result.append(avg)
             date_to_fetch += delta
         return result
 

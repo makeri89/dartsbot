@@ -16,7 +16,6 @@ class Plotter:
         today = datetime.now()
         delta = timedelta(days=1)
         start_date = parser.parse(start_date)
-        print(start_date, today)
         while start_date < today:
             dates.append(start_date.strftime('%d.%m.'))
             start_date += delta

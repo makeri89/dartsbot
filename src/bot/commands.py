@@ -274,7 +274,9 @@ def player_to_figure(update: Update, context: CallbackContext):
     plotter.plot(averages, start_date, player.name)
 
     query.answer()
-    query.edit_message_text('Pelaaja lisätty!')
+    query.edit_message_text(
+        'Pelaaja lisätty!\n\nLisää pelaajia: /figure\n\nHae kaavio: /sendfigure'
+    )
 
     return ConversationHandler.END
 

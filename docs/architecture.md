@@ -16,7 +16,7 @@ The users then sends their name and the bot calls the `create_user()` method of 
 
 ![registrationfailure](./images/registrationfailure.png)
 
-If the user is not using the correct registration link, the bot goes to state `UNAUTHORIZED` and tells teh user they are not authorized to register.
+If the user is not using the correct registration link, the bot goes to state `UNAUTHORIZED` and tells the user they are not authorized to register.
 
 ## Adding a new match
 

@@ -47,5 +47,9 @@ class ScoreService:
             date_to_fetch += delta
         return result
 
+    def get_player_highscore(self, player_id):
+        player = self._user_repository.find_by_id(player_id)
+        return self._repository.find_player_highscore(player)
+
 
 score_service = ScoreService()

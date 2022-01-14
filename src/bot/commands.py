@@ -286,3 +286,23 @@ def send_figure(update: Update, context: CallbackContext):
     plotter.save()
     with open('./fig.png', 'rb') as image:
         update.message.reply_photo(image)
+
+
+def ask_highscore(update: Update, context: CallbackContext):
+    users = user_service.get_users()
+    keyboard = player_keyboard(users)
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Valitse pelaaja:', reply_markup=reply_markup)
+
+
+def send_highscore(update: Update, context: CallbackContext):
+    query = update.callback_query
+    player_id = query.data
+
+    result = score_service.get_player_highscore(player_id)
+
+    query.answer()
+    query.edit_message_text(
+        f'Pelaajan {result["name"]} highscore: {result["highscore"]}'
+    )

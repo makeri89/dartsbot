@@ -74,3 +74,30 @@ class TestScoreRepository(unittest.TestCase):
         date = '2020-01-01 00:00:00'
         result = self.score_repository.find_player_averages_by_date(user, date)
         self.assertEqual(result['average'], None)
+
+    def test_highscore_is_fetched_correctly(self):
+        user = self.user_repository.find_by_id(self.user_id)
+        match_id = uuid4().hex
+        self.match_repository.create(match_id)
+        match = self.match_repository.find_by_id(match_id)
+        self.score_repository.create(
+            player=user,
+            match=match,
+            average=50.0,
+            darts_used=31,
+            highscore=120
+        )
+        match_2_id = uuid4().hex
+        self.match_repository.create(match_2_id)
+        match = self.match_repository.find_by_id(match_2_id)
+        self.score_repository.create(
+            player=user,
+            match=match,
+            average=50.0,
+            darts_used=31,
+            highscore=40
+        )
+
+        result = self.score_repository.find_player_highscore(user)
+        self.assertEqual(result['highscore'], 120)
+        self.assertEqual(result['name'], 'Test User')

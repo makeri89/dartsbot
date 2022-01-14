@@ -60,5 +60,19 @@ class ScoreRepository:
 
         return result.fetchone()
 
+    def find_player_highscore(self, player):
+        cursor = self._connection.cursor()
+
+        result = cursor.execute(
+            '''
+            SELECT :player_name AS name, MAX(highscore) AS highscore
+            FROM scores
+            WHERE player_id=:player_id
+            ''',
+            {'player_id': player.id, 'player_name': player.name}
+        )
+
+        return result.fetchone()
+
 
 score_repository = ScoreRepository(get_database_connection())

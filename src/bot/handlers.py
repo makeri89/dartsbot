@@ -12,6 +12,9 @@ import util.config as config
 average_handler = CommandHandler('getaverage', commands.get_average)
 average_player_handler = CallbackQueryHandler(commands.average_printer)
 
+highscore_handler = CommandHandler('gethighscore', commands.ask_highscore)
+send_highscore_handler = CallbackQueryHandler(commands.send_highscore)
+
 start_handler = CommandHandler('start', commands.start)
 new_average_handler = CommandHandler('addaverage', commands.users_for_average)
 new_match_handler = CommandHandler('newmatch', commands.new_match)

@@ -90,7 +90,7 @@ def average_printer(update: Update, context: CallbackContext):
     query.answer()
 
     query.edit_message_text(
-        text=f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]}')
+        text=f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]:.3f}')
 
 
 def add_average_choice(update: Update, context: CallbackContext):

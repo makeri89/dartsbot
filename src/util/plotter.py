@@ -28,7 +28,12 @@ class Plotter:
         return pd.Series([i if i else np.nan for i in scores])
 
     def _fill_nones(self, scores):
-        return scores.fillna(method='ffill', limit=30)
+        n = len(scores)
+        for i in range(1, n):
+            prev = scores[i-1]
+            if scores[i] == np.nan:
+                scores[i] = prev
+        return scores
 
     def _parse_to_valid_plot_input(self, scores):
         scores = self._get_averages(scores)
@@ -45,7 +50,7 @@ class Plotter:
     def plot(self, scores, start_date, name):
         dates = self._list_dates(start_date)
         y = self._parse_to_valid_plot_input(scores)
-        plt.plot(dates, y, label=name)
+        plt.plot(dates, y, label=name, marker='o')
 
     def save(self):
         plt.legend()

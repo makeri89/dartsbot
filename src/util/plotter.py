@@ -9,7 +9,7 @@ from util.config import FIGURE_FILE
 
 class Plotter:
     def __init__(self):
-        pass
+        self._players_to_figure = []
 
     def _list_dates(self, start_date):
         dates = []
@@ -46,13 +46,23 @@ class Plotter:
 
     def clear(self):
         plt.clf()
+        self._players_to_figure = []
 
     def plot(self, scores, start_date, name):
         dates = self._list_dates(start_date)
         y = self._parse_to_valid_plot_input(scores)
-        plt.plot(dates, y, label=name, marker='o')
+        self._players_to_figure.append((dates, y, name))
+
+    def _plot_all(self):
+        self._players_to_figure.sort(key=lambda x: x[0][0])
+        for player in self._players_to_figure:
+            dates = player[0]
+            y = player[1]
+            name = player[2]
+            plt.plot(dates, y, label=name, marker='o')
 
     def save(self):
+        self._plot_all()
         plt.legend()
         plt.savefig(FIGURE_FILE, dpi=800)
         self.clear()

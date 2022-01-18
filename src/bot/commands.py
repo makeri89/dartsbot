@@ -74,7 +74,7 @@ def users_for_average(update: Update, context: CallbackContext):
     return config.UNAUTHORIZED
 
 
-def get_average(update: Update, context: CallbackContext):
+def get_stats(update: Update, context: CallbackContext):
     users = user_service.get_users()
     keyboard = player_keyboard(users)
 
@@ -82,7 +82,7 @@ def get_average(update: Update, context: CallbackContext):
     update.message.reply_text('Valitse pelaaja:', reply_markup=reply_markup)
 
 
-def average_printer(update: Update, context: CallbackContext):
+def stats_printer(update: Update, context: CallbackContext):
     query = update.callback_query
 
     average = score_service.get_average(query.data)
@@ -93,8 +93,11 @@ def average_printer(update: Update, context: CallbackContext):
     if not average['average']:
         query.edit_message_text('Keskiarvoa ei voitu laskea')
     else:
-        message = f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]:.3f}\n\
-            Highscore: {highscore["highscore"]}'
+        message = (
+            f'Pelaaja: {average["name"]}\n'
+            f'Keskiarvo: {average["average"]:.2f}\n'
+            f'Highscore: {highscore["highscore"]}'
+        )
         query.edit_message_text(message)
 
 

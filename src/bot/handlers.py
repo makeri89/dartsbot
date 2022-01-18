@@ -9,8 +9,8 @@ from telegram.ext import (
 import bot.commands as commands
 import util.config as config
 
-average_handler = CommandHandler('getaverage', commands.get_average)
-average_player_handler = CallbackQueryHandler(commands.average_printer)
+stats_handler = CommandHandler('getstats', commands.get_stats)
+stats_player_handler = CallbackQueryHandler(commands.stats_printer)
 
 start_handler = CommandHandler('start', commands.start)
 new_average_handler = CommandHandler('addaverage', commands.users_for_average)

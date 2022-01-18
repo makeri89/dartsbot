@@ -86,11 +86,17 @@ def average_printer(update: Update, context: CallbackContext):
     query = update.callback_query
 
     average = score_service.get_average(query.data)
+    highscore = score_service.get_player_highscore(query.data)
 
     query.answer()
 
-    query.edit_message_text(
-        text=f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]:.3f}')
+    if not average['average']:
+        query.edit_message_text('Keskiarvoa ei voitu laskea')
+    else:
+        query.edit_message_text(
+            text=f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]:.3f}'
+        )
+        query.edit_message_text(f'Highscore: {highscore["highscore"]}')
 
 
 def add_average_choice(update: Update, context: CallbackContext):
@@ -241,6 +247,7 @@ Komennot:
 • Voit ohittaa muut tiedot lähettämällä jotain muuta kuin numeron
 
 /getaverage \- hae pelaajan keskiarvo
+/gethighscore \- hae pelaajan highscore
 
 /figure \- lisää pelaaja kaavioon
 • Kaavio kertoo pelaajien keskiarvohistorian
@@ -286,23 +293,3 @@ def send_figure(update: Update, context: CallbackContext):
     plotter.save()
     with open('./fig.png', 'rb') as image:
         update.message.reply_photo(image)
-
-
-def ask_highscore(update: Update, context: CallbackContext):
-    users = user_service.get_users()
-    keyboard = player_keyboard(users)
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Valitse pelaaja:', reply_markup=reply_markup)
-
-
-def send_highscore(update: Update, context: CallbackContext):
-    query = update.callback_query
-    player_id = query.data
-
-    result = score_service.get_player_highscore(player_id)
-
-    query.answer()
-    query.edit_message_text(
-        f'Pelaajan {result["name"]} highscore: {result["highscore"]}'
-    )

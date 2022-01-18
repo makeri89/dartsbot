@@ -93,10 +93,9 @@ def average_printer(update: Update, context: CallbackContext):
     if not average['average']:
         query.edit_message_text('Keskiarvoa ei voitu laskea')
     else:
-        query.edit_message_text(
-            text=f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]:.3f}'
-        )
-        query.edit_message_text(f'Highscore: {highscore["highscore"]}')
+        message = f'Pelaaja: {average["name"]}, keskiarvo: {average["average"]:.3f}\n\
+            Highscore: {highscore["highscore"]}'
+        query.edit_message_text(message)
 
 
 def add_average_choice(update: Update, context: CallbackContext):

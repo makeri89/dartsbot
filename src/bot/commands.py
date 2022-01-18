@@ -248,8 +248,7 @@ Komennot:
 • Keskiarvo on ainoa pakollinen tieto
 • Voit ohittaa muut tiedot lähettämällä jotain muuta kuin numeron
 
-/getaverage \- hae pelaajan keskiarvo
-/gethighscore \- hae pelaajan highscore
+/getstats \- hae pelaajan tilastot
 
 /figure \- lisää pelaaja kaavioon
 • Kaavio kertoo pelaajien keskiarvohistorian

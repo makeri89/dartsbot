@@ -124,7 +124,7 @@ def average(update: Update, context: CallbackContext):
 
 
 def new_match(update: Update, context: CallbackContext):
-    if not is_registered(update.message.chat.id):
+    if is_registered(update.message.chat.id):
         global current_match_id
         current_match_id = match_service.add_match()
         update.message.reply_text('Uusi peli luotu!')
@@ -301,7 +301,7 @@ def send_figure(update: Update, context: CallbackContext):
 
 
 def highscore_figure(update: Update, context: CallbackContext):
-    if not is_registered(update.message.chat.id):
+    if is_registered(update.message.chat.id):
         users = user_service.get_users()
         keyboard = player_keyboard(users)
         reply_markup = InlineKeyboardMarkup(keyboard)

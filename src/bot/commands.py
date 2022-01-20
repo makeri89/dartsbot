@@ -61,19 +61,6 @@ def name(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
-def users_for_average(update: Update, context: CallbackContext):
-    if is_registered(update.message.chat.id):
-        users = user_service.get_users()
-        keyboard = player_keyboard(users)
-
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        update.message.reply_text(
-            'Valitse pelaaja:', reply_markup=reply_markup)
-
-        return config.PLAYER
-    return config.UNAUTHORIZED
-
-
 def get_stats(update: Update, context: CallbackContext):
     users = user_service.get_users()
     keyboard = player_keyboard(users)
@@ -99,6 +86,19 @@ def stats_printer(update: Update, context: CallbackContext):
             f'Highscore: {highscore["highscore"]}'
         )
         query.edit_message_text(message)
+
+
+def users_for_average(update: Update, context: CallbackContext):
+    if is_registered(update.message.chat.id):
+        users = user_service.get_users()
+        keyboard = player_keyboard(users)
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            'Valitse pelaaja:', reply_markup=reply_markup)
+
+        return config.PLAYER
+    return config.UNAUTHORIZED
 
 
 def add_average_choice(update: Update, context: CallbackContext):
@@ -180,6 +180,10 @@ def save_score(update: Update, context: CallbackContext):
         highscore = int(update.message.text)
     except:
         highscore = 0
+
+    if highscore > 180:
+        update.message.reply_text('Syötä kelvollinen highscore')
+        return config.SAVE_MATCH
 
     score_service.add_score(
         current_match_id,
@@ -294,3 +298,30 @@ def send_figure(update: Update, context: CallbackContext):
     plotter.save()
     with open('./fig.png', 'rb') as image:
         update.message.reply_photo(image)
+
+
+def highscore_figure(update: Update, context: CallbackContext):
+    if is_registered(update.message.chat.id):
+        users = user_service.get_users()
+        keyboard = player_keyboard(users)
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text(
+            'Lisää pelaaja kaavioon:', reply_markup=reply_markup)
+        return config.HIGHSCORE_FIGURE_PLAYERS
+    return config.UNAUTHORIZED
+
+
+def player_to_highscore_figure(update: Update, context: CallbackContext):
+    query = update.callback_query
+    player_id = query.data
+    player = user_service.get_user_by_id(player_id)
+    highscores = score_service.get_all_highscores_by_date(player.id)
+    start_date = highscores[0]['date']
+    plotter.plot(highscores, start_date, player.name)
+
+    query.answer()
+    query.edit_message_text(
+        'Pelaaja lisätty!\n\nLisää pelaajia: /highscorefigure\n\nHae kaavio: /sendfigure'
+    )
+
+    return ConversationHandler.END

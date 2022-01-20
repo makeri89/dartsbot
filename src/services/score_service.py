@@ -51,5 +51,25 @@ class ScoreService:
         player = self._user_repository.find_by_id(player_id)
         return self._repository.find_player_highscore(player)
 
+    def get_date_highscore(self, player_id, date):
+        player = self._user_repository.find_by_id(player_id)
+        isodate = date.isoformat()
+        return self._repository.find_player_highscores_by_date(player, isodate)
+
+    def get_all_highscores_by_date(self, player_id):
+        player = self._user_repository.find_by_id(player_id)
+        oldest_match = self._match_repository.find_oldest_match_by_player(
+            player
+        )
+        result = []
+        date_to_fetch = parser.parse(oldest_match.date)
+        today = datetime.now()
+        delta = timedelta(days=1)
+        while date_to_fetch <= today:
+            avg = self.get_date_highscore(player.id, date_to_fetch)
+            result.append(avg)
+            date_to_fetch += delta
+        return result
+
 
 score_service = ScoreService()

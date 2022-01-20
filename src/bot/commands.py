@@ -319,7 +319,6 @@ def player_to_highscore_figure(update: Update, context: CallbackContext):
     player_id = query.data
     player = user_service.get_user_by_id(player_id)
     highscores = score_service.get_all_highscores_by_date(player.id)
-    print(highscores)
     start_date = highscores[0]['date']
     plotter.plot(highscores, start_date, player.name)
 

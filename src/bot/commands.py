@@ -257,6 +257,9 @@ Komennot:
 /figure \- lisää pelaaja kaavioon
 • Kaavio kertoo pelaajien keskiarvohistorian
 
+/highscorefigure \- lisää pelaajan kaavioon
+• Kaavio kertoo pelaajien highscorehistorian
+
 /sendfigure \- lähettää kaavion haluamillasi pelaajilla
 • Samalla nollaa kaavioon valitut pelaajat
 

@@ -21,8 +21,11 @@ class Plotter:
             start_date += delta
         return dates
 
-    def _get_averages(self, scores):
-        return [score['average'] for score in scores]
+    def _get_stats(self, scores):
+        if 'average' in scores[0].keys():
+            return [score['average'] for score in scores]
+        if 'highscore' in scores[0].keys():
+            return [score['highscore'] for score in scores]
 
     def _parse_to_pd(self, scores):
         return pd.Series([i if i else np.nan for i in scores])
@@ -36,7 +39,7 @@ class Plotter:
         return scores
 
     def _parse_to_valid_plot_input(self, scores):
-        scores = self._get_averages(scores)
+        scores = self._get_stats(scores)
         scores = self._parse_to_pd(scores)
         scores = self._fill_nones(scores)
         return scores

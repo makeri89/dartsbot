@@ -124,7 +124,7 @@ def average(update: Update, context: CallbackContext):
 
 
 def new_match(update: Update, context: CallbackContext):
-    if is_registered(update.message.chat.id):
+    if not is_registered(update.message.chat.id):
         global current_match_id
         current_match_id = match_service.add_match()
         update.message.reply_text('Uusi peli luotu!')
@@ -301,7 +301,7 @@ def send_figure(update: Update, context: CallbackContext):
 
 
 def highscore_figure(update: Update, context: CallbackContext):
-    if is_registered(update.message.chat.id):
+    if not is_registered(update.message.chat.id):
         users = user_service.get_users()
         keyboard = player_keyboard(users)
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -316,6 +316,7 @@ def player_to_highscore_figure(update: Update, context: CallbackContext):
     player_id = query.data
     player = user_service.get_user_by_id(player_id)
     highscores = score_service.get_all_highscores_by_date(player.id)
+    print(highscores)
     start_date = highscores[0]['date']
     plotter.plot(highscores, start_date, player.name)
 

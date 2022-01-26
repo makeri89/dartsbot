@@ -142,9 +142,11 @@ def match_average(update: Update, context: CallbackContext):
 
     global user_for_match
     user_for_match = query.data
+    
+    user = user_service.get_user_by_id(query.data)
 
     query.answer()
-    query.edit_message_text(text='Syötä keskiarvo:')
+    query.edit_message_text(text=f'Pelaaja: {user.name}\nSyötä keskiarvo:')
 
     return config.DARTS_USED
 

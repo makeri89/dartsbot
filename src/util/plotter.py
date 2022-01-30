@@ -67,9 +67,9 @@ class Plotter:
 
     def _plot_all(self):
         self._players_to_figure.sort(key=lambda x: x[0][0])
+        
         for player in self._players_to_figure:
             dates = player[0]
-            dates = self._remove_extra_date_labels(dates)
             y = player[1]
             name = player[2]
             plt.plot(dates, y, label=name, marker='o')

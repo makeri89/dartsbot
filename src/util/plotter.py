@@ -55,11 +55,21 @@ class Plotter:
         dates = self._list_dates(start_date)
         y = self._parse_to_valid_plot_input(scores)
         self._players_to_figure.append((dates, y, name))
+        
+    def _remove_extra_date_labels(self, dates):
+        n = len(dates)
+        spaces = 0
+        for i in range(n):
+            if i % 3 != 0:
+                dates[i] = '' + ' ' * spaces
+                spaces += 1
+        return dates
 
     def _plot_all(self):
         self._players_to_figure.sort(key=lambda x: x[0][0])
         for player in self._players_to_figure:
             dates = player[0]
+            dates = self._remove_extra_date_labels(dates)
             y = player[1]
             name = player[2]
             plt.plot(dates, y, label=name, marker='o')

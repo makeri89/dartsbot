@@ -103,6 +103,19 @@ class ScoreRepository:
         )
         
         return result.fetchall()
+    
+    def find_player_past_month_average(self, player):
+        cursor = self._connection.cursor()
+        
+        result = cursor.execute(
+            '''
+            SELECT u.name, AVG(s.average) AS average
+            FROM users u, scores s, matches m
+            WHERE u.id=s.player_id AND u.id=:user_id
+            AND s.match_id=m.id AND m.date >= date('now', '-30 days')
+            ''',
+            {'user_id': player.id}
+        )
 
 
 score_repository = ScoreRepository(get_database_connection())

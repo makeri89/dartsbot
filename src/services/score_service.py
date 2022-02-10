@@ -74,6 +74,10 @@ class ScoreService:
     def get_player_top_averages(self, player_id):
         player = self._user_repository.find_by_id(player_id)
         return self._repository.find_player_top_averages(player)
+    
+    def get_player_past_month_average(self, player_id):
+        player = self._user_repository.find_by_id(player_id)
+        return self._repository.find_player_past_month_average(player)
 
 
 score_service = ScoreService()

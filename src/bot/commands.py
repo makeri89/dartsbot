@@ -75,6 +75,7 @@ def stats_printer(update: Update, context: CallbackContext):
     average = score_service.get_average(query.data)
     highscore = score_service.get_player_highscore(query.data)
     top_averages = score_service.get_player_top_averages(query.data)
+    past_month_average = score_service.get_player_past_month_averages(query.data)
 
     query.answer()
 
@@ -85,12 +86,13 @@ def stats_printer(update: Update, context: CallbackContext):
             f'Pelaaja: {average["name"]}\n'
             f'Keskiarvo: {average["average"]:.2f}\n'
             f'Highscore: {highscore["highscore"]}\n'
-            f'Top 3 averaget:'
+            f'Top 3 averaget:\n'
         )
         i = 1
         for average in top_averages:
-            message += f'\n{i}: {average["average"]}'
+            message += f'{i}: {average["average"]}\n'
             i += 1
+        message += f'1 kk average: {past_month_average["average"]}'
         query.edit_message_text(message)
 
 

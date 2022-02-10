@@ -74,6 +74,7 @@ def stats_printer(update: Update, context: CallbackContext):
 
     average = score_service.get_average(query.data)
     highscore = score_service.get_player_highscore(query.data)
+    top_averages = score_service.get_player_top_averages(query.data)
 
     query.answer()
 
@@ -83,8 +84,13 @@ def stats_printer(update: Update, context: CallbackContext):
         message = (
             f'Pelaaja: {average["name"]}\n'
             f'Keskiarvo: {average["average"]:.2f}\n'
-            f'Highscore: {highscore["highscore"]}'
+            f'Highscore: {highscore["highscore"]}\n'
+            f'Top 3 averaget:'
         )
+        i = 1
+        for average in top_averages:
+            message += f'\n{i}: {average["average"]}'
+            i += 1
         query.edit_message_text(message)
 
 
@@ -211,7 +217,6 @@ def save_score(update: Update, context: CallbackContext):
 
 def more_players(update: Update, context: CallbackContext):
     if update.message.text == 'Kyllä':
-        logger.info('text was Kyllä')
         users = user_service.get_users()
         keyboard = player_keyboard(users)
         reply_markup = InlineKeyboardMarkup(keyboard)

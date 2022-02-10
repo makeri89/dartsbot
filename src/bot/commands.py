@@ -92,7 +92,7 @@ def stats_printer(update: Update, context: CallbackContext):
         for average in top_averages:
             message += f'{i}: {average["average"]}\n'
             i += 1
-        message += f'1 kk average: {past_month_average["average"]}'
+        message += f'1 kk average: {past_month_average["average"]:.2f}'
         query.edit_message_text(message)
 
 

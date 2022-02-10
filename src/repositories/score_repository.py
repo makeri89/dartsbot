@@ -116,6 +116,8 @@ class ScoreRepository:
             ''',
             {'user_id': player.id}
         )
+        
+        return result.fetchone()
 
 
 score_repository = ScoreRepository(get_database_connection())

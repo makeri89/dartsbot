@@ -96,7 +96,7 @@ class ScoreRepository:
             '''
             SELECT u.name, s.average AS average
             FROM users u, scores s
-            WHERE u.id=s.player_id AND u.id=:user:id
+            WHERE u.id=s.player_id AND u.id=:user_id
             ORDER BY average DESC LIMIT 3
             ''',
             {'user_id': player.id}

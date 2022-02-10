@@ -75,7 +75,7 @@ def stats_printer(update: Update, context: CallbackContext):
     average = score_service.get_average(query.data)
     highscore = score_service.get_player_highscore(query.data)
     top_averages = score_service.get_player_top_averages(query.data)
-    past_month_average = score_service.get_player_past_month_averages(query.data)
+    past_month_average = score_service.get_player_past_month_average(query.data)
 
     query.answer()
 

@@ -21,7 +21,7 @@ class Plotter:
             if day_of_month == '1':
                 dates.append(start_date.strftime('%m.'))
             else:
-                dates.append('')
+                dates.append('-')
             start_date += delta
         return dates
 

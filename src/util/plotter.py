@@ -17,7 +17,11 @@ class Plotter:
         delta = timedelta(days=1)
         start_date = parser.parse(start_date)
         while start_date < today:
-            dates.append(start_date.strftime('%d.%m.'))
+            day_of_month = start_date.strftime('%d')
+            if day_of_month == '1':
+                dates.append(start_date.strftime('%m.'))
+            else:
+                dates.append('')
             start_date += delta
         return dates
 

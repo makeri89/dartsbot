@@ -16,9 +16,17 @@ class Plotter:
         today = datetime.now()
         delta = timedelta(days=1)
         start_date = parser.parse(start_date)
+        filler = ''
         while start_date < today:
-            dates.append(start_date.strftime('%m'))
+            day_of_month = start_date.strftime('%d')
+            print(day_of_month)
+            if day_of_month == '01':
+                print('aa')
+                dates.append(start_date.strftime('%m'))
+            else:
+                dates.append(filler)
             start_date += delta
+            filler += ' '
         return dates
 
     def _get_stats(self, scores):

@@ -19,7 +19,7 @@ class Plotter:
         while start_date < today:
             day_of_month = start_date.strftime('%d')
             print(day_of_month)
-            if day_of_month == '1':
+            if day_of_month == '01':
                 print('aa')
                 dates.append(start_date.strftime('%m.'))
             else:

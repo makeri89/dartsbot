@@ -72,33 +72,15 @@ class Plotter:
             dates = player[0]
             y = player[1]
             name = player[2]
-            ax.plot(dates, y, label=name)
+            ax.plot(dates, y, label=name, marker='o')
 
     def save(self):
         fig, ax = plt.subplots()
         self._plot_all(ax)
-        [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 7 != 0]
+        [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 14 != 0]
         plt.legend()
         fig.savefig(FIGURE_FILE, dpi=800)
         self.clear()
 
     def show(self):
         plt.show()
-
-if __name__ == '__main__':
-    scores = [10, 15, 20, 22]
-    dates = ['a', 'b', 'c', 'e']
-    
-    scores2 = [8, 12, 16]
-    dates2 = ['a', 'b', 'd']
-    
-    fig, ax = plt.subplots()
-    
-    ax.plot(dates, scores, label='player1')
-    ax.plot(dates2, scores2, label='player2')
-    
-    plt.legend()
-
-    [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 2 != 0]
-    
-    plt.show()

@@ -77,7 +77,7 @@ class Plotter:
     def save(self):
         fig, ax = plt.subplots()
         self._plot_all(ax)
-        [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 14 != 0]
+        [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 30 != 0]
         plt.legend()
         fig.savefig(FIGURE_FILE, dpi=800)
         self.clear()

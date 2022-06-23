@@ -65,20 +65,40 @@ class Plotter:
                 spaces += 1
         return dates
 
-    def _plot_all(self):
+    def _plot_all(self, ax):
         self._players_to_figure.sort(key=lambda x: x[0][0])
         
         for player in self._players_to_figure:
             dates = player[0]
             y = player[1]
             name = player[2]
-            plt.plot(dates, y, label=name, marker='o')
+            ax.plot(dates, y, label=name)
 
     def save(self):
-        self._plot_all()
+        fig, ax = plt.subplots()
+        self._plot_all(ax)
+        [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 7 != 0]
         plt.legend()
-        plt.savefig(FIGURE_FILE, dpi=800)
+        fig.savefig(FIGURE_FILE, dpi=800)
         self.clear()
 
     def show(self):
         plt.show()
+
+if __name__ == '__main__':
+    scores = [10, 15, 20, 22]
+    dates = ['a', 'b', 'c', 'e']
+    
+    scores2 = [8, 12, 16]
+    dates2 = ['a', 'b', 'd']
+    
+    fig, ax = plt.subplots()
+    
+    ax.plot(dates, scores, label='player1')
+    ax.plot(dates2, scores2, label='player2')
+    
+    plt.legend()
+
+    [l.set_visible(False) for (i, l) in enumerate(ax.xaxis.get_ticklabels()) if i % 2 != 0]
+    
+    plt.show()
